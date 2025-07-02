@@ -58,38 +58,59 @@ const App = () => {
     }
   };
 
-  const bgColor = darkMode ? "#111" : "#f4f4f4";
-  const textColor = darkMode ? "#fff" : "#000";
-  const cardColor = darkMode ? "#222" : "#fff";
+  const theme = {
+    light: {
+      bg: "#fefefe",
+      text: "#1e293b",
+      card: "#ffffff",
+      input: "#f1f5f9",
+      border: "#e2e8f0",
+    },
+    dark: {
+      bg: "#0f172a",
+      text: "#f8fafc",
+      card: "#1e293b",
+      input: "#1e293b",
+      border: "#334155",
+    },
+  };
+
+  const current = darkMode ? theme.dark : theme.light;
 
   return (
     <div
       style={{
-        backgroundColor: bgColor,
+        backgroundColor: current.bg,
         minHeight: "100vh",
-        padding: "30px",
-        color: textColor,
-        fontFamily: "Segoe UI, sans-serif",
+        color: current.text,
+        fontFamily: "'Poppins', sans-serif",
+        padding: "30px 20px",
+        transition: "all 0.3s ease",
       }}
     >
-      <div style={{ maxWidth: "650px", margin: "auto" }}>
-        <h2 style={{ textAlign: "center" }}>Weather Tracker</h2>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet"
+      />
 
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          style={{
-            float: "right",
-            marginBottom: "10px",
-            backgroundColor: darkMode ? "#444" : "#ddd",
-            color: darkMode ? "#fff" : "#000",
-            border: "none",
-            padding: "5px 10px",
-            cursor: "pointer",
-            borderRadius: "6px",
-          }}
-        >
-          {darkMode ? "Light Mode" : "Dark Mode"}
-        </button>
+      <div style={{ maxWidth: "700px", margin: "auto" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
+          <h2 style={{ fontWeight: 600 }}> Weather Tracker</h2>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            style={{
+              backgroundColor: current.input,
+              color: current.text,
+              border: `1px solid ${current.border}`,
+              borderRadius: "50px",
+              padding: "6px 16px",
+              cursor: "pointer",
+              transition: "all 0.3s",
+            }}
+          >
+            {darkMode ? "☀ Light" : "🌙 Dark"}
+          </button>
+        </div>
 
         <input
           type="text"
@@ -97,79 +118,105 @@ const App = () => {
           value={city}
           onChange={(e) => setCity(e.target.value)}
           style={{
-            padding: "10px",
+            padding: "14px",
             width: "100%",
-            fontSize: "16px",
-            marginBottom: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
+            fontSize: "15px",
+            borderRadius: "12px",
+            marginBottom: "15px",
+            border: `1px solid ${current.border}`,
+            backgroundColor: current.input,
+            color: current.text,
           }}
         />
 
-        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            style={{ padding: "8px", flex: 1 }}
+            style={{
+              flex: 1,
+              padding: "10px",
+              borderRadius: "10px",
+              border: `1px solid ${current.border}`,
+              backgroundColor: current.input,
+              color: current.text,
+            }}
           />
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            style={{ padding: "8px", flex: 1 }}
+            style={{
+              flex: 1,
+              padding: "10px",
+              borderRadius: "10px",
+              border: `1px solid ${current.border}`,
+              backgroundColor: current.input,
+              color: current.text,
+            }}
           />
         </div>
 
         <button
           onClick={handleSearch}
           style={{
-            padding: "10px 20px",
+            width: "100%",
+            padding: "14px",
             fontSize: "16px",
-            cursor: "pointer",
-            backgroundColor: "#3b82f6",
+            background: "#3b82f6",
             color: "#fff",
             border: "none",
-            borderRadius: "6px",
-            marginBottom: "20px",
-            width: "100%",
+            borderRadius: "12px",
+            cursor: "pointer",
+            fontWeight: "600",
+            boxShadow: "0 3px 10px rgba(0,0,0,0.15)",
+            marginBottom: "24px",
           }}
         >
-          Search
+           Search Weather
         </button>
 
         {locationName && (
           <div
             style={{
-              backgroundColor: cardColor,
-              padding: "15px",
-              borderRadius: "8px",
-              boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-              marginBottom: "20px",
+              backgroundColor: current.card,
+              padding: "20px",
+              borderRadius: "16px",
+              boxShadow: "0 5px 18px rgba(0,0,0,0.1)",
+              marginBottom: "24px",
             }}
           >
-            <h3>Location: {locationName}</h3>
-            <p>Latitude: {lat}</p>
-            <p>Longitude: {lon}</p>
+            <h3 style={{ marginBottom: "10px" }}> {locationName}</h3>
+            <p style={{ margin: "0" }}>Latitude: {lat}</p>
+            <p style={{ margin: "0" }}>Longitude: {lon}</p>
           </div>
         )}
 
         {chartData.length > 0 && (
           <>
-            <h4 style={{ marginTop: "20px", textAlign: "center" }}>
-              Temperature Trend
+            <h4 style={{ textAlign: "center", marginBottom: "12px" }}>
+               Max Temperature Trend (°C)
             </h4>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
-                <CartesianGrid stroke={darkMode ? "#555" : "#ccc"} />
-                <XAxis dataKey="date" stroke={textColor} />
-                <YAxis unit="°C" stroke={textColor} />
-                <Tooltip />
+                <CartesianGrid stroke={current.border} />
+                <XAxis dataKey="date" stroke={current.text} />
+                <YAxis stroke={current.text} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: current.card,
+                    borderRadius: "8px",
+                    border: "none",
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="temperature"
-                  stroke="#f97316"
-                  strokeWidth={2}
+                  stroke="#ef4444"
+                  strokeWidth={2.5}
+                  dot={{ r: 3 }}
+                  animationDuration={600}
                 />
               </LineChart>
             </ResponsiveContainer>
